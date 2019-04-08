@@ -1,0 +1,6 @@
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\x86\Debug\WirelessRFID.exe.config
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\x86\Debug\WirelessRFID.exe
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\x86\Debug\WirelessRFID.pdb
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\obj\x86\Debug\WirelessRFID.csproj.CoreCompileInputs.cache
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\obj\x86\Debug\WirelessRFID.exe
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\obj\x86\Debug\WirelessRFID.pdb
