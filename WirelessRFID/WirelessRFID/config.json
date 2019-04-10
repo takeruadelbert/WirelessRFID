@@ -1,0 +1,10 @@
+﻿{
+  "IPAddressServer": "http://192.168.1.210",
+  "API_GetTypeGate": "/epass2018/ws/parking_members/init",
+  "API_CheckDataExistInDB": "/epass2018/ws/parking_ins/check_member_valid",
+  "API_SaveDataIn": "/epass2018/ws/parking_ins/member_in",
+  "API_SaveDataOut": "test",
+  "IPAddressUHFDevice": "192.168.1.200",
+  "IPCamera": "http://192.168.1.121",
+  "WebCamUsage": true
+}
