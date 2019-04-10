@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WirelessRFID.Class.API;
 
 namespace WirelessRFID.Class.Helper
 {
@@ -23,6 +26,23 @@ namespace WirelessRFID.Class.Helper
                 return result;
             }
             return "";
+        }
+
+        public DataConfigJSON ConvertConfigJSON()
+        {
+            string dataConfigJSONPath = GetApplicationExecutableDirectoryName() + @"\config.json";
+            using (StreamReader r = new StreamReader(dataConfigJSONPath))
+            {
+                string json = r.ReadToEnd();
+                DataConfigJSON data = JsonConvert.DeserializeObject<DataConfigJSON>(json);
+                return data;
+            }
+        }
+
+        public string GetApplicationExecutableDirectoryName()
+        {
+            string workingDirectory = Environment.CurrentDirectory;
+            return Directory.GetParent(workingDirectory).Parent.FullName;
         }
     }
 }

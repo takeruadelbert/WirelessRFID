@@ -54,11 +54,21 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AForge">
+      <HintPath>..\..\..\BNITapCash\BNITapCash\bin\Debug\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video">
+      <HintPath>..\..\..\BNITapCash\BNITapCash\bin\Debug\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.DirectShow">
+      <HintPath>..\..\..\BNITapCash\BNITapCash\bin\Debug\AForge.Video.DirectShow.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -67,12 +77,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\API\DataConfigJSON.cs" />
     <Compile Include="Class\API\DataResponse.cs" />
+    <Compile Include="Class\API\DataResponseBarrierGate.cs" />
     <Compile Include="Class\API\RESTAPI.cs" />
     <Compile Include="Class\BarrierGate\Gate.cs" />
+    <Compile Include="Class\Helper\Base64Helper.cs" />
     <Compile Include="Class\Lib\Dis.cs" />
     <Compile Include="Class\Lib\EPC_data.cs" />
     <Compile Include="Class\Helper\TKHelper.cs" />
+    <Compile Include="Class\Miscellaneous\Webcam\Webcam.cs" />
     <Compile Include="Class\WirelessRFIDReader.cs" />
     <Compile Include="Class\Lib\ZLDM.cs" />
     <Compile Include="Program.cs" />
@@ -80,7 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="config.json" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

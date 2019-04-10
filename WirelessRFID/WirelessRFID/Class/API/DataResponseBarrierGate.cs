@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace WirelessRFID.Class.API
 {
-    class DataResponse
+    class DataResponseBarrierGate
     {
-        [JsonProperty("status")]
-        public int Status
+        [JsonProperty("code")]
+        public int Code
         {
             get;
             set;

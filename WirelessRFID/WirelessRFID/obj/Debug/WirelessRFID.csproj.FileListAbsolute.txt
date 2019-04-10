@@ -9,3 +9,9 @@ D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\Newtonsoft.Json.dl
 D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\Newtonsoft.Json.pdb
 D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\Newtonsoft.Json.xml
 D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\obj\Debug\WirelessRFID.csproj.CopyComplete
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\AForge.dll
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\AForge.Video.DirectShow.dll
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\AForge.Video.dll
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\AForge.xml
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\AForge.Video.xml
+D:\Kantor\C#\WirelessRFID\WirelessRFID\WirelessRFID\bin\Debug\AForge.Video.DirectShow.xml

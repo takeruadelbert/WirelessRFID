@@ -8,6 +8,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WirelessRFID.Class.Helper;
 using WirelessRFID.Class.BarrierGate;
+using WirelessRFID.Class.API;
+using AForge.Video;
+using System.Drawing;
+using System.Drawing.Imaging;
+using WirelessRFID.Class.Miscellaneous.Webcam;
 
 namespace WirelessRFID.Class
 {
@@ -24,26 +29,24 @@ namespace WirelessRFID.Class
         int RWBank = 0;
         int addStart = 0;
         int addEnd = 0;
-
         int counts = 1;
-
         bool bConnected = false;
-
         bool isReadOnce = true;
-
         public Dis.HANDLE_FUN f = new Dis.HANDLE_FUN(HandleData);
-
         static ResourceManager[] rmArray = new ResourceManager[2]{
                                                     new ResourceManager("DisDemo.SimpChinese", typeof(WirelessRFIDReader).Assembly),
                                                     new ResourceManager("DisDemo.English", typeof(WirelessRFIDReader).Assembly)};
         static ResourceManager rm = rmArray[0];
-
         static byte deviceNo = 0;
-
         public delegate void DeleConnectDev(byte[] ip, int CommPort, int PortOrBaudRate);
-
         public delegate void UpdateControlEventHandler();
         public static event UpdateControlEventHandler UpdateControl;
+        private RESTAPI api = new RESTAPI();
+        private string liveCameraURL = DataConfigJSON.IPCamera + "/snapshot";
+        public static Image WebCamImage;
+        private Webcam webcam;
+        private const int width = 352, height = 240;
+
         public struct WSAData
         {
             public short wVersion;
@@ -63,6 +66,7 @@ namespace WirelessRFID.Class
         public WirelessRFIDReader()
         {
             UpdateControl = new UpdateControlEventHandler(UpdateListView);
+            webcam = new Webcam();
         }
 
         bool bWSAInit = false;
@@ -123,8 +127,8 @@ namespace WirelessRFID.Class
             byte[] ip = new byte[32];
             int CommPort = 0;
             int PortOrBaudRate = 0;
-            string ip_address = AutoSearchDevice();
-            if (!string.IsNullOrEmpty(AutoSearchDevice()))
+            string ip_address = DataConfigJSON.IPAddressUHFDevice;
+            if (!string.IsNullOrEmpty(ip_address))
             {
                 if ((!Regex.IsMatch(ip_address, "^[0-9.]+$")) || ip_address.Length < 7 || ip_address.Length > 15)
                 {
@@ -144,7 +148,7 @@ namespace WirelessRFID.Class
                 bConnected = false;
                 Console.WriteLine("Successfully Connected to device.");
                 Console.WriteLine("Starting ...");
-                System.Threading.Thread.Sleep(3000);                
+                System.Threading.Thread.Sleep(3000);
             }
             else
             {
@@ -207,9 +211,31 @@ namespace WirelessRFID.Class
                 string UID = tk.ConvertEPCHexToNumber(epc);
                 Console.WriteLine("UID : " + UID);
 
+                string base64ImageIPCamera = "", base64ImageWebcam = "";
+
+                // Take Snapshot of Camera
+                Bitmap img = api.OpenIPCamera(liveCameraURL);
+                base64ImageIPCamera = Base64Helper.ToBase64String(img, ImageFormat.Png);
+
+                if (Gate.type.ToLower() == "masuk")
+                {           
+                    // Take Snapshot Webcam if it's enable.
+                    if(DataConfigJSON.WebCamUsage)
+                    {
+                        Bitmap bmpWebcam = new Bitmap(WebCamImage, width, height);
+                        base64ImageWebcam = bmpWebcam.ToBase64String(ImageFormat.Png);
+                        Console.WriteLine(base64ImageWebcam);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("keluar");
+                }
+
                 // open barrier gate
-                Gate barrierGate = new Gate();
-                barrierGate.Open();
+                //Gate barrierGate = new Gate();
+                //barrierGate.Open();
+
             }
             catch (Exception ex)
             {
