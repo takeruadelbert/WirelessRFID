@@ -134,23 +134,36 @@ namespace WirelessRFID.Class.API
                 return bmp;
             }
             catch (WebException ex)
-            {                
-                Console.WriteLine(ex.Message);
+            {
+                Console.WriteLine("Error : Failed to Open URL. " + ex.Message);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error When Fetch Data Snapshot IP Camerta : " + ex.Message);
                 return null;
             }
         }
 
         public byte[] ReadFully(Stream input)
         {
-            byte[] buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
+            try
             {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                byte[] buffer = new byte[16 * 1024];
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    ms.Write(buffer, 0, read);
+                    int read;
+                    while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        ms.Write(buffer, 0, read);
+                    }
+                    return ms.ToArray();
                 }
-                return ms.ToArray();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error Convert Stream To Byte[] : " + ex.Message);
+                return null;
             }
         }
     }

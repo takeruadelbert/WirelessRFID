@@ -13,12 +13,14 @@ namespace WirelessRFID.Class.API
         public static string IPAddressServer { get; set; }
         [JsonProperty("API_GetTypeGate")]
         public static string APIGetTypeGate { get; set; }
-        [JsonProperty("API_CheckDataExistInDB")]
-        public static string APICheckDataExistInDB { get; set; }
+        [JsonProperty("API_CheckMemberValidParkingOut")]
+        public static string APICheckMemberValidParkingOut { get; set; }
         [JsonProperty("API_SaveDataIn")]
         public static string APISaveDataIn { get; set; }
         [JsonProperty("API_SaveDataOut")]
         public static string APISaveDataOut { get; set; }
+        [JsonProperty("API_CheckMemberValidParkingIn")]
+        public static string APICheckMemberValidParkingIn { get; set; }
         [JsonProperty("IPAddressUHFDevice")]
         public static string IPAddressUHFDevice { get; set; }
         [JsonProperty("IPCamera")]

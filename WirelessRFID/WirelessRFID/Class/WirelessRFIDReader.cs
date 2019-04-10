@@ -13,6 +13,8 @@ using AForge.Video;
 using System.Drawing;
 using System.Drawing.Imaging;
 using WirelessRFID.Class.Miscellaneous.Webcam;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace WirelessRFID.Class
 {
@@ -46,6 +48,7 @@ namespace WirelessRFID.Class
         public static Image WebCamImage;
         private Webcam webcam;
         private const int width = 352, height = 240;
+        private Gate barrierGate;
 
         public struct WSAData
         {
@@ -66,7 +69,9 @@ namespace WirelessRFID.Class
         public WirelessRFIDReader()
         {
             UpdateControl = new UpdateControlEventHandler(UpdateListView);
-            webcam = new Webcam();
+            barrierGate = new Gate();
+            if (DataConfigJSON.WebCamUsage)
+                webcam = new Webcam();
         }
 
         bool bWSAInit = false;
@@ -216,26 +221,118 @@ namespace WirelessRFID.Class
                 // Take Snapshot of Camera
                 Bitmap img = api.OpenIPCamera(liveCameraURL);
                 base64ImageIPCamera = Base64Helper.ToBase64String(img, ImageFormat.Png);
-
                 if (Gate.type.ToLower() == "masuk")
-                {           
-                    // Take Snapshot Webcam if it's enable.
-                    if(DataConfigJSON.WebCamUsage)
+                {
+                    // check if UID is valid
+                    JObject parameter = new JObject();
+                    parameter["uid"] = UID;
+                    var sent_parameter = JsonConvert.SerializeObject(parameter);
+                    DataResponse checkMemberValidParkingIn = api.API_Post(DataConfigJSON.IPAddressServer, DataConfigJSON.APICheckMemberValidParkingIn, sent_parameter);
+                    if (checkMemberValidParkingIn != null)
                     {
-                        Bitmap bmpWebcam = new Bitmap(WebCamImage, width, height);
-                        base64ImageWebcam = bmpWebcam.ToBase64String(ImageFormat.Png);
-                        Console.WriteLine(base64ImageWebcam);
+                        switch (checkMemberValidParkingIn.Status)
+                        {
+                            case 206: // valid
+                                // Take Snapshot Webcam if it's enable.
+                                if (DataConfigJSON.WebCamUsage)
+                                {
+                                    Bitmap bmpWebcam = new Bitmap(WebCamImage, width, height);
+                                    base64ImageWebcam = bmpWebcam.ToBase64String(ImageFormat.Png);
+                                }
+                                
+                                // send data parking in to server
+                                JObject param = new JObject();
+                                param["uid"] = UID;
+                                param["ip"] = DataConfigJSON.IPAddressUHFDevice;
+                                param["face_image"] = base64ImageWebcam;
+                                param["plate_image"] = base64ImageIPCamera;
+                                var sent_param = JsonConvert.SerializeObject(param);
+
+                                DataResponse dataResponseParkingIn = api.API_Post(DataConfigJSON.IPAddressServer, DataConfigJSON.APISaveDataIn, sent_param);
+                                if (dataResponseParkingIn != null)
+                                {
+                                    switch (dataResponseParkingIn.Status)
+                                    {
+                                        case 206:
+                                            // open barrier gate
+                                            barrierGate.Open();
+                                            break;
+                                        default:
+                                            Console.WriteLine(dataResponseParkingIn.Status + " -- " + dataResponseParkingIn.Message);
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Error : Failed Send Data to Server.");
+                                }
+                                break;
+                            case 505:
+                                barrierGate.Open();
+                                break;
+                            default:
+                                Console.WriteLine(checkMemberValidParkingIn.Message);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error : Failed to Check Member Validity.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("keluar");
+                    // check if UID is valid
+                    JObject parameter_out = new JObject();
+                    parameter_out["uid"] = UID;
+                    var sent_parameter_out = JsonConvert.SerializeObject(parameter_out);
+                    DataResponse checkMemberValidParkingOut = api.API_Post(DataConfigJSON.IPAddressServer, DataConfigJSON.APICheckMemberValidParkingOut, sent_parameter_out);
+                    if (checkMemberValidParkingOut != null)
+                    {
+                        switch (checkMemberValidParkingOut.Status)
+                        {
+                            case 206:
+                                int response = Convert.ToInt32(checkMemberValidParkingOut.Data[0].ToString());
+                                if (response == 0)
+                                {
+                                    JObject param_out = new JObject();
+                                    param_out["uid"] = UID;
+                                    param_out["ip"] = DataConfigJSON.IPAddressUHFDevice;
+                                    param_out["image"] = base64ImageIPCamera;
+                                    var sent_param_out = JsonConvert.SerializeObject(param_out);
+                                    DataResponse dataResponseParkingOut = api.API_Post(DataConfigJSON.IPAddressServer, DataConfigJSON.APISaveDataOut, sent_param_out);
+                                    if (dataResponseParkingOut != null)
+                                    {
+                                        switch(dataResponseParkingOut.Status)
+                                        {
+                                            case 206:
+                                                barrierGate.Open();
+                                                break;
+                                            default:
+                                                Console.WriteLine(dataResponseParkingOut.Message);
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Error : Failed to Send Data to Server.");
+                                    }
+                                }
+                                else
+                                {
+                                    barrierGate.Open();
+                                }
+                                break;
+                            default:
+                                Console.WriteLine(checkMemberValidParkingOut.Status + " -- " + checkMemberValidParkingOut.Message);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error : Failed to Check Member Validity.");
+                    }
                 }
-
-                // open barrier gate
-                //Gate barrierGate = new Gate();
-                //barrierGate.Open();
-
             }
             catch (Exception ex)
             {

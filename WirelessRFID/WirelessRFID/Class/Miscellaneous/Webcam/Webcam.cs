@@ -47,7 +47,7 @@ namespace WirelessRFID.Class.Miscellaneous.Webcam
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Error WebCam : " + ex.Message);
             }
         }
     }
