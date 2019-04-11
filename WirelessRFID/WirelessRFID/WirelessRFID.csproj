@@ -31,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -54,9 +55,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AForge">
-      <HintPath>..\..\..\BNITapCash\BNITapCash\bin\Debug\AForge.dll</HintPath>
-    </Reference>
     <Reference Include="AForge.Video">
       <HintPath>..\..\..\BNITapCash\BNITapCash\bin\Debug\AForge.Video.dll</HintPath>
     </Reference>

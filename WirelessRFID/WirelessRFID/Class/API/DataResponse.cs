@@ -30,5 +30,10 @@ namespace WirelessRFID.Class.API
             get;
             set;
         }
+
+        public String toString()
+        {
+            return Status + " -- " + Message + " -- " + Data.ToString();
+        }
     }
 }

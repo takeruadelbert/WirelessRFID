@@ -7,10 +7,6 @@ using System.Threading.Tasks;
 using WirelessRFID.Class;
 using WirelessRFID.Class.Helper;
 using WirelessRFID.Class.BarrierGate;
-using WirelessRFID.Class.Helper;
-using WirelessRFID.Class.API;
-using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace WirelessRFID
 {

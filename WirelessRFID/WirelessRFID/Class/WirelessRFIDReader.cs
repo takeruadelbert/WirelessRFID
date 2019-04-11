@@ -220,7 +220,10 @@ namespace WirelessRFID.Class
 
                 // Take Snapshot of Camera
                 Bitmap img = api.OpenIPCamera(liveCameraURL);
-                base64ImageIPCamera = Base64Helper.ToBase64String(img, ImageFormat.Png);
+                if (img != null)
+                {
+                    base64ImageIPCamera = Base64Helper.ToBase64String(img, ImageFormat.Png);
+                }
                 if (Gate.type.ToLower() == "masuk")
                 {
                     // check if UID is valid
@@ -237,9 +240,10 @@ namespace WirelessRFID.Class
                                 if (DataConfigJSON.WebCamUsage)
                                 {
                                     Bitmap bmpWebcam = new Bitmap(WebCamImage, width, height);
-                                    base64ImageWebcam = bmpWebcam.ToBase64String(ImageFormat.Png);
+                                    if (bmpWebcam != null)
+                                        base64ImageWebcam = bmpWebcam.ToBase64String(ImageFormat.Png);
                                 }
-                                
+
                                 // send data parking in to server
                                 JObject param = new JObject();
                                 param["uid"] = UID;
@@ -247,7 +251,6 @@ namespace WirelessRFID.Class
                                 param["face_image"] = base64ImageWebcam;
                                 param["plate_image"] = base64ImageIPCamera;
                                 var sent_param = JsonConvert.SerializeObject(param);
-
                                 DataResponse dataResponseParkingIn = api.API_Post(DataConfigJSON.IPAddressServer, DataConfigJSON.APISaveDataIn, sent_param);
                                 if (dataResponseParkingIn != null)
                                 {
@@ -303,7 +306,7 @@ namespace WirelessRFID.Class
                                     DataResponse dataResponseParkingOut = api.API_Post(DataConfigJSON.IPAddressServer, DataConfigJSON.APISaveDataOut, sent_param_out);
                                     if (dataResponseParkingOut != null)
                                     {
-                                        switch(dataResponseParkingOut.Status)
+                                        switch (dataResponseParkingOut.Status)
                                         {
                                             case 206:
                                                 barrierGate.Open();
