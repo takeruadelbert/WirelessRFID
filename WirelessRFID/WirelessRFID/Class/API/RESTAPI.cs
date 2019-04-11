@@ -46,6 +46,7 @@ namespace WirelessRFID.Class.API
                     Stream receiveStream = response.GetResponseStream();
                     StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
                     result = readStream.ReadToEnd();
+                    Console.WriteLine(result);
                     var json = JsonConvert.DeserializeObject<DataResponse>(result);
                     return json;
                 }
